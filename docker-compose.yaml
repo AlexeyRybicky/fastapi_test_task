@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+    container_name: fastapi_test_task
+    env_file:
+      - .env-non-dev
+    command: ["/fastapi_app/docker/app.sh"]
+    ports:
+      - 9999:8000
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    container_name: database_app
+    command: -p 6543
+    expose:
+      - 6543
+    env_file:
+      - .env-non-dev
+
+  database_admin:
+    container_name: database_admin
+    image: dpage/pgadmin4
+    env_file:
+      - .env-non-dev
+    depends_on:
+      - db
